@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { UserService } from "../services/user.service";
+import { UserService, userService } from "../services/user.service";
 import { StatusCodes } from "http-status-codes";
 
-class UserController {
+export class UserController {
   private _service: UserService;
 
   constructor(service: UserService) {
@@ -17,4 +17,4 @@ class UserController {
   }
 }
 
-export { UserController }
+export const userController = new UserController(userService)

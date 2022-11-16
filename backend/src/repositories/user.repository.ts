@@ -1,16 +1,9 @@
 import { PrismaClient, User } from "@prisma/client";
 import by from "bcrypt";
 import { Token } from "../utils/jwt";
-// import { db } from "../db";
+import { db } from "../db";
 
-class UserRepository {
-  private _db: PrismaClient;
-
-  constructor(db: PrismaClient) {
-    this._db = db;
-    db.user;
-  }
-
+export class UserRepository {
   private encodePassword(password: string) {
     const salt = by.genSaltSync(5);
     const hash = by.hashSync(password, salt);
@@ -21,7 +14,7 @@ class UserRepository {
   public async create(user: User) {
     const hash = this.encodePassword(user.password);
 
-    const { password, ...newUser } = await this._db.user.create({
+    const { password, ...newUser } = await db.user.create({
       data: {
         username: user.username,
         password: hash,
@@ -37,8 +30,8 @@ class UserRepository {
   }
 
   public async getByUserName(username: string) {
-    return this._db.user.findUnique({ where: { username } })
+    return db.user.findUnique({ where: { username } })
   }
 }
 
-export { UserRepository }
+export const userRepository = new UserRepository();

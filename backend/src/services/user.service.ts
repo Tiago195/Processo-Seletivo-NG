@@ -1,9 +1,9 @@
 import { User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { UserRepository } from "../repositories/user.repository";
+import { userRepository, UserRepository } from "../repositories/user.repository";
 import { ErrorApi } from "../utils/errorGenerate";
 
-class UserService {
+export class UserService {
   private _repository: UserRepository;
 
   constructor(repository: UserRepository) {
@@ -20,4 +20,4 @@ class UserService {
   }
 }
 
-export { UserService }
+export const userService = new UserService(userRepository)
