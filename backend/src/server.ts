@@ -11,6 +11,6 @@ app.get("/", (req, res) => {
   res.status(200).end("OK")
 })
 
-
 app.use(errorHandler);
-app.listen(3001, () => console.log("init port 3001"));
+
+export { app }
