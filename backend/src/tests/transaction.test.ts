@@ -75,11 +75,8 @@ describe('Testes rota transaction', () => {
       const response = await chai.request(app).post('/transaction').send(newTransaction);
 
       expect(response.status).to.have.equal(201);
-      expect(response.body).to.have.property('id');
-      expect(response.body).to.have.property('debitedAccountId');
-      expect(response.body).to.have.property('creditedAccountId');
-      expect(response.body).to.have.property('value');
-      expect(response.body).to.have.property('createdAt');
+      expect(response.body).to.have.property('transaction');
+      expect(response.body).to.have.property('balance');
     });
   });
 
