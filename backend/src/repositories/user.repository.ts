@@ -4,6 +4,12 @@ import { db } from '../db';
 export class UserRepository {
   public async create (user: User) {
     const { password, ...userWithoutPassword } = await db.user.create({
+      select: {
+        id: true,
+        username: true,
+        password: true,
+        account: true
+      },
       data: {
         username: user.username,
         password: user.password,
@@ -19,7 +25,15 @@ export class UserRepository {
   }
 
   public async getByUserName (username: string) {
-    return await db.user.findUnique({ where: { username } });
+    return await db.user.findUnique({
+      select: {
+        id: true,
+        username: true,
+        password: true,
+        account: true
+      },
+      where: { username }
+    });
   }
 
   public async getAll (q: string) {
