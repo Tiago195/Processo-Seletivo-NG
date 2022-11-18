@@ -1,11 +1,11 @@
-import "express-async-errors";
-import { Router } from "express";
-import { userController } from "../controllers/user.controller";
+import 'express-async-errors';
+import { Router } from 'express';
+import { userController } from '../controllers/user.controller';
 // import { db } from "../db";
 // import { UserRepository } from "../repositories/user.repository";
 // import { UserService } from "../services/user.service";
-import { validBody } from "../middlewares/validBody.middleware";
-import { UserSchema } from "../utils/schemas";
+import { validBody } from '../middlewares/validBody.middleware';
+import { UserSchema } from '../utils/schemas';
 
 const userRouter = Router();
 
@@ -13,6 +13,8 @@ const userRouter = Router();
 // const userService = new UserService(userRepository);
 // const usercontroller = new UserController(userService);
 
-userRouter.post("/", validBody(UserSchema), userController.create);
+userRouter.post('/', validBody(UserSchema), userController.create);
+
+userRouter.post('/login', userController.login);
 
 export { userRouter };

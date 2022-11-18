@@ -12,11 +12,11 @@ datasource db {
 }
 
 model Account {
-  id              Int          @id @default(autoincrement())
-  balance         Int          @default(100)
+  id              Int           @id @default(autoincrement())
+  balance         Int           @default(100)
   User            User?
-  debitedAccount  Transaction? @relation("debited")
-  creditedAccount Transaction? @relation("credited")
+  debitedAccount  Transaction[] @relation("debited")
+  creditedAccount Transaction[] @relation("credited")
 }
 
 model User {
@@ -29,8 +29,8 @@ model User {
 
 model Transaction {
   id                Int      @id @default(autoincrement())
-  debitedAccountId  Int      @unique
-  creditedAccountId Int      @unique
+  debitedAccountId  Int
+  creditedAccountId Int
   value             Int
   createdAt         DateTime @default(now())
 

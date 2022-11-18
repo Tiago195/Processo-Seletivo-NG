@@ -6,7 +6,9 @@
   "scripts": {
     "test": "mocha -r ts-node/register ./src/tests/**.test.ts -t 10000 --exit",
     "db:push": "npx prisma db push",
-    "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts"
+    "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts",
+    "lint": "npx eslint src",
+    "lint:fix": "npm run lint -- --fix"
   },
   "keywords": [],
   "author": "",
