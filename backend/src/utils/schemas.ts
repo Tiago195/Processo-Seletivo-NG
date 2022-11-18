@@ -8,3 +8,9 @@ export const UserSchema = joi.object({
   password: joi.string().minOfNumeric(1).minOfUppercase(1).min(8).required()
   // accountId: number
 });
+
+export const TransactionSchema = joi.object({
+  debitedAccountId: joi.number().required(),
+  creditedAccountId: joi.number().required(),
+  value: joi.number().required()
+});
