@@ -21,6 +21,21 @@ export class UserRepository {
   public async getByUserName (username: string) {
     return await db.user.findUnique({ where: { username } });
   }
+
+  public async getAll (q: string) {
+    return await db.user.findMany({
+      select: {
+        accountId: true,
+        id: true,
+        username: true
+      },
+      where: {
+        username: {
+          contains: q
+        }
+      }
+    });
+  }
 }
 
 export const userRepository = new UserRepository();
