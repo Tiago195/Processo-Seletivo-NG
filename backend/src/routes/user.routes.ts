@@ -17,4 +17,6 @@ userRouter.post('/', validBody(UserSchema), userController.create);
 
 userRouter.post('/login', validBody(UserSchema), userController.login);
 
+userRouter.get('/', userController.getAll);
+
 export { userRouter };
