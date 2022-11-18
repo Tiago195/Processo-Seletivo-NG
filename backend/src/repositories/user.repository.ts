@@ -8,7 +8,12 @@ export class UserRepository {
         id: true,
         username: true,
         password: true,
-        account: true
+        account: {
+          select: {
+            balance: true
+          }
+        },
+        accountId: true
       },
       data: {
         username: user.username,
@@ -30,7 +35,12 @@ export class UserRepository {
         id: true,
         username: true,
         password: true,
-        account: true
+        account: {
+          select: {
+            balance: true
+          }
+        },
+        accountId: true
       },
       where: { username }
     });

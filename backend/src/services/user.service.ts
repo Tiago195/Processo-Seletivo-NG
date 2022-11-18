@@ -43,7 +43,7 @@ export class UserService {
   }
 
   public async getAll (q: string) {
-    const users = this._repository.getAll(q);
+    const users = await this._repository.getAll(q);
 
     return users;
   }
