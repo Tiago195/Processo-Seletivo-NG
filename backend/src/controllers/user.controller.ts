@@ -8,6 +8,7 @@ export class UserController {
   constructor (service: UserService) {
     this._service = service;
     this.create = this.create.bind(this);
+    this.login = this.login.bind(this);
   }
 
   public async create (req: Request, res: Response) {
@@ -16,7 +17,11 @@ export class UserController {
     res.status(StatusCodes.OK).json(user);
   }
 
-  public async login (req: Request, res: Response) { }
+  public async login (req: Request, res: Response) {
+    const user = await this._service.login(req.body);
+
+    res.status(StatusCodes.OK).json(user);
+  }
 
   public async getAll (req: Request, res: Response) { }
 }
