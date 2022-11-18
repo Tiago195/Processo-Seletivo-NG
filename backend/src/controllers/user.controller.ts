@@ -9,6 +9,7 @@ export class UserController {
     this._service = service;
     this.create = this.create.bind(this);
     this.login = this.login.bind(this);
+    this.getAll = this.getAll.bind(this);
   }
 
   public async create (req: Request, res: Response) {
@@ -23,7 +24,12 @@ export class UserController {
     res.status(StatusCodes.OK).json(user);
   }
 
-  public async getAll (req: Request, res: Response) { }
+  public async getAll (req: Request, res: Response) {
+    const { q } = req.query;
+    const users = await this._service.getAll(q as string);
+
+    res.status(StatusCodes.OK).json(users);
+  }
 }
 
 export const userController = new UserController(userService);
