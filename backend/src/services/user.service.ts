@@ -41,6 +41,12 @@ export class UserService {
 
     return { ...userWithoutPassword, token: Token.encodeToken(userWithoutPassword) };
   }
+
+  public async getAll (q: string) {
+    const users = this._repository.getAll(q);
+
+    return users;
+  }
 }
 
 export const userService = new UserService(userRepository);
