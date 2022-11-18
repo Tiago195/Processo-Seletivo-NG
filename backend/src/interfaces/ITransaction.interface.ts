@@ -1,3 +1,10 @@
-import { Transaction } from '@prisma/client';
+export interface newTrasaction {
+  username: string
+  value: number
+}
 
-export type newTrasaction = Omit<Transaction, 'id' | 'createdAt'>;
+export interface IQueryFilter {
+  data?: string
+  in?: boolean
+  out?: boolean
+}
