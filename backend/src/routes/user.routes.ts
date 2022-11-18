@@ -6,6 +6,7 @@ import { userController } from '../controllers/user.controller';
 // import { UserService } from "../services/user.service";
 import { validBody } from '../middlewares/validBody.middleware';
 import { UserSchema } from '../utils/schemas';
+import { validToken } from '../middlewares/validToken.middleware';
 
 const userRouter = Router();
 
@@ -17,6 +18,6 @@ userRouter.post('/', validBody(UserSchema), userController.create);
 
 userRouter.post('/login', validBody(UserSchema), userController.login);
 
-userRouter.get('/', userController.getAll);
+userRouter.get('/', validToken, userController.getAll);
 
 export { userRouter };

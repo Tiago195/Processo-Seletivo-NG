@@ -1,6 +1,7 @@
 import 'express-async-errors';
 import { Router } from 'express';
 import { transactionController } from '../controllers/transaction.controller';
+import { validToken } from '../middlewares/validToken.middleware';
 // import { db } from "../db";
 // import { UserRepository } from "../repositories/user.repository";
 // import { UserService } from "../services/user.service";
@@ -13,7 +14,7 @@ const transactionRouter = Router();
 // const userService = new UserService(userRepository);
 // const usercontroller = new UserController(userService);
 
-transactionRouter.post('/', transactionController.create);
+transactionRouter.post('/', validToken, transactionController.create);
 
 // transactionRouter.post('/login', validBody(UserSchema), userController.login);
 
