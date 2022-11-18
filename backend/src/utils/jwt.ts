@@ -1,11 +1,11 @@
-import { User } from '@prisma/client';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { IUser } from '../interfaces/IUser.interface';
 
 class Token {
   private static readonly secret = process.env.SECRET ?? 'segredo';
   private static readonly options: SignOptions = { expiresIn: '24h' };
 
-  public static encodeToken (user: Omit<User, 'password'>) {
+  public static encodeToken (user: Omit<IUser, 'password'>) {
     return jwt.sign(user, this.secret, this.options);
   }
 

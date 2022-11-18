@@ -3,17 +3,12 @@ import { db } from '../db';
 
 export class UserRepository {
   public async create (user: User) {
-    const { password, ...userWithoutPassword } = await db.user.create({
+    return await db.user.create({
       select: {
         id: true,
         username: true,
         password: true,
-        account: {
-          select: {
-            balance: true
-          }
-        },
-        accountId: true
+        account: true
       },
       data: {
         username: user.username,
@@ -25,8 +20,6 @@ export class UserRepository {
         }
       }
     });
-
-    return userWithoutPassword;
   }
 
   public async getByUserName (username: string) {
@@ -35,12 +28,7 @@ export class UserRepository {
         id: true,
         username: true,
         password: true,
-        account: {
-          select: {
-            balance: true
-          }
-        },
-        accountId: true
+        account: true
       },
       where: { username }
     });

@@ -25,9 +25,9 @@ export class UserService {
     if (userExist) throw new ErrorApi('User already exist', StatusCodes.CONFLICT);
 
     const hash = this.encodePassword(user.password);
-    const newUser = await this._repository.create({ ...user, password: hash });
+    const { password, ...userWithoutPassword } = await this._repository.create({ ...user, password: hash });
 
-    return { ...newUser, token: Token.encodeToken(newUser) };
+    return { ...userWithoutPassword, token: Token.encodeToken(userWithoutPassword) };
   }
 
   public async login (user: UserLogin) {
