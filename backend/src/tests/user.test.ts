@@ -7,6 +7,7 @@ import { app } from '../app';
 // import { UserRepository } from '../repositories/user.repository';
 import { userRepository } from '../repositories/user.repository';
 import { IUser } from '../interfaces/IUser.interface';
+import { Token } from '../utils/jwt';
 // import { describe } from 'node:test';
 
 chai.use(chaiHttp);
@@ -24,8 +25,36 @@ describe('Testes rota user', () => {
     username: 'user'
   };
 
+  const users = [
+    {
+      accountId: 2,
+      id: 2,
+      username: 'tiagoo'
+    },
+    {
+      accountId: 3,
+      id: 3,
+      username: 'fadiga'
+    },
+    {
+      accountId: 4,
+      id: 4,
+      username: 'ruy'
+    },
+    {
+      accountId: 5,
+      id: 5,
+      username: 'santos'
+    }
+  ];
+
   const newUser = {
     password: 'Senha123',
+    username: 'user'
+  };
+
+  const incorrectPassword = {
+    password: 'Incorr3ct',
     username: 'user'
   };
 
@@ -119,10 +148,39 @@ describe('Testes rota user', () => {
     });
 
     it('Verifica se a resposta da requisição retona um erro se a senha for incorreta com status 400', async () => {
-      const response = await chai.request(app).post('/user/login').send(failUser);
+      const response = await chai.request(app).post('/user/login').send(incorrectPassword);
 
       expect(response.body).to.have.property('message');
       expect(response.status).to.have.equal(400);
+    });
+  });
+
+  describe('GET user getAll caso de sucesso', () => {
+    before(() => {
+      sinon.stub(Token, 'decodeToken')
+        .onCall(0).resolves(true)
+        .onCall(1).throws();
+      sinon.stub(userRepository, 'getAll').resolves(users);
+    });
+
+    after(() => {
+      (userRepository.getAll as sinon.SinonStub).restore();
+      (Token.decodeToken as sinon.SinonStub).restore();
+    });
+
+    it('Verifica se a resposta da requisição retona os dados dos usuarios', async () => {
+      const response = await chai.request(app).get('/user');
+
+      expect(response.status).to.have.equal(200);
+      expect(response.body[0]).to.have.property('id');
+      expect(response.body[0]).to.have.property('accountId');
+      expect(response.body[0]).to.have.property('username');
+    });
+
+    it('Verifica se a resposta da requisição retona um erro porque usuario n informou token', async () => {
+      const response = await chai.request(app).get('/user');
+
+      expect(response.status).to.have.equal(401);
     });
   });
 });

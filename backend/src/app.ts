@@ -9,10 +9,6 @@ app.use(express.json());
 app.use('/user', userRouter);
 app.use('/transaction', transactionRouter);
 
-app.get('/', (req, res) => {
-  res.status(200).end('OK');
-});
-
 app.use(errorHandler);
 
 export { app };
