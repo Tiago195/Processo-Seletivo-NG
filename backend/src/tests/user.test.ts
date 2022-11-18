@@ -33,8 +33,8 @@ describe('Testes rota user', () => {
 
   describe('POST user caso de sucesso', () => {
     before(() => {
-      sinon.stub(userRepository, 'create').resolves({ token: 'token', ...user });
-      sinon.stub(userRepository, 'getByUserName').resolves(null);
+      sinon.stub(userRepository, 'create').resolves(user);
+      sinon.stub(userRepository, 'getByUserName').resolves(undefined);
     });
 
     after(() => {
