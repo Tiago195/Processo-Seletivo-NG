@@ -4,22 +4,11 @@ import { transactionController } from '../controllers/transaction.controller';
 import { validToken } from '../middlewares/validToken.middleware';
 import { validBody } from '../middlewares/validBody.middleware';
 import { TransactionSchema } from '../utils/schemas';
-// import { db } from "../db";
-// import { UserRepository } from "../repositories/user.repository";
-// import { UserService } from "../services/user.service";
-// import { validBody } from '../middlewares/validBody.middleware';
-// import { UserSchema } from '../utils/schemas';
 
 const transactionRouter = Router();
 
-// export const userRepository = new UserRepository();
-// const userService = new UserService(userRepository);
-// const usercontroller = new UserController(userService);
-
 transactionRouter.post('/', validBody(TransactionSchema), validToken, transactionController.create);
 
-// transactionRouter.post('/login', validBody(UserSchema), userController.login);
-
-// transactionRouter.get('/', userController.getAll);
+transactionRouter.get('/', validToken, transactionController.getAll);
 
 export { transactionRouter };
