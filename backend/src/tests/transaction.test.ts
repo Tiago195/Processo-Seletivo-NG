@@ -22,8 +22,7 @@ describe('Testes rota transaction', () => {
   };
 
   const newTransaction = {
-    debitedAccountId: 2,
-    creditedAccountId: 1,
+    username: 'UserOne',
     value: 50
   };
 
@@ -39,28 +38,36 @@ describe('Testes rota transaction', () => {
     value: 200
   };
 
-  const accountOne: Account = {
+  const UserOne = {
     id: 1,
-    balance: 100
+    username: 'userOne',
+    account: {
+      id: 1,
+      balance: 100
+    }
   };
 
-  const accountTwo: Account = {
+  const UserTwo = {
     id: 2,
-    balance: 100
+    username: 'userTwo',
+    account: {
+      id: 2,
+      balance: 100
+    }
   };
 
   describe('POST transaction create caso de sucesso', () => {
     before(() => {
       sinon.stub(Token, 'decodeToken').resolves(true);
-      sinon.stub(transactionRepository, 'getAccountById')
-        .onCall(0).resolves(accountOne)
-        .onCall(1).resolves(accountTwo);
+      sinon.stub(transactionRepository, 'getUserById')
+        .onCall(0).resolves(UserOne)
+        .onCall(1).resolves(UserTwo);
       sinon.stub(transactionRepository, 'create').resolves(transaction);
     });
 
     after(() => {
       (transactionRepository.create as SinonStub).restore();
-      (transactionRepository.getAccountById as SinonStub).restore();
+      (transactionRepository.getUserById as SinonStub).restore();
       (Token.decodeToken as SinonStub).restore();
     });
 
@@ -79,22 +86,22 @@ describe('Testes rota transaction', () => {
   describe('POST transaction create caso de falha', () => {
     before(() => {
       sinon.stub(Token, 'decodeToken').resolves(true);
-      sinon.stub(transactionRepository, 'getAccountById')
+      sinon.stub(transactionRepository, 'getUserById')
         .onCall(0).resolves(undefined)
-        .onCall(1).resolves(accountTwo)
-        .onCall(2).resolves(accountOne)
-        .onCall(3).resolves(accountTwo);
+        .onCall(1).resolves(undefined)
+        .onCall(2).resolves(UserOne)
+        .onCall(3).resolves(UserTwo);
     });
 
     after(() => {
-      (transactionRepository.getAccountById as SinonStub).restore();
+      (transactionRepository.getUserById as SinonStub).restore();
       (Token.decodeToken as SinonStub).restore();
     });
 
-    it('Verifica se a resposta da requisição retona um erro se a conta não for encontrada com status 400 ', async () => {
+    it('Verifica se a resposta da requisição retona um erro se a conta não for encontrada com status 404 ', async () => {
       const response = await chai.request(app).post('/transaction').send(newTransaction);
 
-      expect(response.status).to.have.equal(400);
+      expect(response.status).to.have.equal(404);
     });
 
     it('Verifica se a resposta da requisição retona um erro se a conta não tiver o valor necessario com status 400', async () => {
