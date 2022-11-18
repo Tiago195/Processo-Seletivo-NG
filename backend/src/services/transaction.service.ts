@@ -14,7 +14,7 @@ export class TransactionService {
     const existCreditedAccountId = await this._repository.getAccountById(transaction.creditedAccountId);
     const existDebitedAccountId = await this._repository.getAccountById(transaction.debitedAccountId);
 
-    if (!existCreditedAccountId || !existDebitedAccountId) throw new ErrorApi('Credited or Devited account invalid', StatusCodes.BAD_REQUEST);
+    if (!existCreditedAccountId || !existDebitedAccountId) throw new ErrorApi('Credited or Debited account invalid', StatusCodes.BAD_REQUEST);
 
     if (existDebitedAccountId.balance - transaction.value < 0) throw new ErrorApi('Value invalid', StatusCodes.BAD_REQUEST);
 

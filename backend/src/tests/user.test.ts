@@ -45,7 +45,7 @@ describe('Testes rota user', () => {
       (userRepository.getByUserName as sinon.SinonStub).restore();
     });
 
-    it('Verifica se a resposta da requisição retonar os dados do novo usuario e seu token', async () => {
+    it('Verifica se a resposta da requisição retona os dados do novo usuario e seu token', async () => {
       const response = await chai.request(app).post('/user').send(newUser);
 
       expect(response.body).to.have.property('id');
@@ -65,14 +65,14 @@ describe('Testes rota user', () => {
       (userRepository.getByUserName as sinon.SinonStub).restore();
     });
 
-    it('Verifica se a resposta da requisição retonar um erro com status 409', async () => {
+    it('Verifica se a resposta da requisição retona um erro com status 409', async () => {
       const response = await chai.request(app).post('/user').send(newUser);
 
       expect(response.body).to.have.property('message');
       expect(response.status).to.have.equal(409);
     });
 
-    it('Verifica se a resposta da requisição retonar um erro com status 400', async () => {
+    it('Verifica se a resposta da requisição retona um erro com status 400', async () => {
       const response = await chai.request(app).post('/user').send(failUser);
 
       expect(response.body).to.have.property('message');
@@ -89,7 +89,7 @@ describe('Testes rota user', () => {
       (userRepository.getByUserName as sinon.SinonStub).restore();
     });
 
-    it('Verifica se a resposta da requisição retonar os dados do usuario logado e seu token', async () => {
+    it('Verifica se a resposta da requisição retona os dados do usuario logado e seu token', async () => {
       const response = await chai.request(app).post('/user/login').send(newUser);
 
       expect(response.body).to.have.property('id');
@@ -111,14 +111,14 @@ describe('Testes rota user', () => {
       (userRepository.getByUserName as sinon.SinonStub).restore();
     });
 
-    it('Verifica se a resposta da requisição retonar um erro se o usuario não for encontrado com status 400', async () => {
+    it('Verifica se a resposta da requisição retona um erro se o usuario não for encontrado com status 400', async () => {
       const response = await chai.request(app).post('/user/login').send(newUser);
 
       expect(response.body).to.have.property('message');
       expect(response.status).to.have.equal(400);
     });
 
-    it('Verifica se a resposta da requisição retonar um erro se a senha for incorreta com status 400', async () => {
+    it('Verifica se a resposta da requisição retona um erro se a senha for incorreta com status 400', async () => {
       const response = await chai.request(app).post('/user/login').send(failUser);
 
       expect(response.body).to.have.property('message');
