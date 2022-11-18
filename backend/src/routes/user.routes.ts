@@ -15,6 +15,6 @@ const userRouter = Router();
 
 userRouter.post('/', validBody(UserSchema), userController.create);
 
-userRouter.post('/login', userController.login);
+userRouter.post('/login', validBody(UserSchema), userController.login);
 
 export { userRouter };
