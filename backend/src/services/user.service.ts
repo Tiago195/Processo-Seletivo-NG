@@ -1,7 +1,10 @@
 import { User } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
+import { UserLogin } from '../interfaces/IUser.interface';
 import { userRepository, UserRepository } from '../repositories/user.repository';
 import { ErrorApi } from '../utils/errorGenerate';
+import by from 'bcrypt';
+import { Token } from '../utils/jwt';
 
 export class UserService {
   private readonly _repository: UserRepository;
@@ -10,13 +13,33 @@ export class UserService {
     this._repository = repository;
   }
 
+  private encodePassword (password: string): string {
+    const salt = by.genSaltSync(Number(process.env.SALT) || 5);
+    const hash = by.hashSync(password, salt);
+
+    return hash;
+  }
+
   public async create (user: User) {
     const userExist = await this._repository.getByUserName(user.username);
-
     if (userExist) throw new ErrorApi('User already exist', StatusCodes.CONFLICT);
-    const newUser = await this._repository.create(user);
 
-    return newUser;
+    const hash = this.encodePassword(user.password);
+    const newUser = await this._repository.create({ ...user, password: hash });
+
+    return { ...newUser, token: Token.encodeToken(newUser) };
+  }
+
+  public async login (user: UserLogin) {
+    const userExist = await this._repository.getByUserName(user.username);
+    if (!userExist) throw new ErrorApi('Username or password is invalid', StatusCodes.BAD_REQUEST);
+
+    const isValidLogin = await by.compare(user.password, userExist.password);
+    if (!isValidLogin) throw new ErrorApi('Username or password is invalid', StatusCodes.BAD_REQUEST);
+
+    const { password, ...userWithoutPassword } = userExist;
+
+    return { ...userWithoutPassword, token: Token.encodeToken(userWithoutPassword) };
   }
 }
 
