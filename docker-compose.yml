@@ -14,6 +14,7 @@ services:
   backend:
     container_name: NG-backend
     build: ./backend
+    restart: always
     ports:
       - 3001:3001
     depends_on:
@@ -25,3 +26,4 @@ services:
       - SECRET=senhasupersecreta
       - SALT=5
       - PORT=3001
+    command: bash -c "chown -R root /backend && npm run db:reset && npm run dev"
