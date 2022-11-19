@@ -22,3 +22,6 @@ services:
       - ./backend:/backend
     environment:
       - DATABASE_URL=postgresql://root:password12@db:5432/mydb?schema=public
+      - SECRET=senhasupersecreta
+      - SALT=5
+      - PORT=3001
