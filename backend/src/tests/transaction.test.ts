@@ -5,7 +5,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { app } from '../app';
 import { transactionRepository } from '../repositories/transaction.repository';
-import { Account, Transaction } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import { Token } from '../utils/jwt';
 
 chai.use(chaiHttp);
@@ -21,14 +21,18 @@ describe('Testes rota transaction', () => {
     createdAt: new Date()
   };
 
-  const newTransaction = {
-    username: 'UserOne',
+  const newTransactionUserOne = {
+    username: 'userOne',
+    value: 50
+  };
+
+  const newTransactionUserTwo = {
+    username: 'userTwo',
     value: 50
   };
 
   const invalidValue = {
-    debitedAccountId: 2,
-    creditedAccountId: 1,
+    username: 'userTwo',
     value: 200
   };
 
@@ -56,9 +60,33 @@ describe('Testes rota transaction', () => {
     }
   };
 
+  const transactions = [
+    {
+      id: 1,
+      debitedAccountId: 1,
+      creditedAccountId: 2,
+      value: 50,
+      createdAt: new Date()
+    },
+    {
+      id: 2,
+      debitedAccountId: 1,
+      creditedAccountId: 2,
+      value: 10,
+      createdAt: new Date()
+    },
+    {
+      id: 3,
+      debitedAccountId: 1,
+      creditedAccountId: 2,
+      value: 10,
+      createdAt: new Date()
+    }
+  ];
+
   describe('POST transaction create caso de sucesso', () => {
     before(() => {
-      sinon.stub(Token, 'decodeToken').resolves(true);
+      sinon.stub(Token, 'decodeToken').returns(UserOne);
       sinon.stub(transactionRepository, 'getUserById')
         .onCall(0).resolves(UserOne)
         .onCall(1).resolves(UserTwo);
@@ -72,7 +100,7 @@ describe('Testes rota transaction', () => {
     });
 
     it('Verifica se a resposta da requisição retona os dados da nova transaction', async () => {
-      const response = await chai.request(app).post('/transaction').send(newTransaction);
+      const response = await chai.request(app).post('/transaction').send(newTransactionUserTwo);
 
       expect(response.status).to.have.equal(201);
       expect(response.body).to.have.property('transaction');
@@ -82,7 +110,7 @@ describe('Testes rota transaction', () => {
 
   describe('POST transaction create caso de falha', () => {
     before(() => {
-      sinon.stub(Token, 'decodeToken').resolves(true);
+      sinon.stub(Token, 'decodeToken').returns(UserOne);
       sinon.stub(transactionRepository, 'getUserById')
         .onCall(0).resolves(undefined)
         .onCall(1).resolves(undefined)
@@ -96,7 +124,7 @@ describe('Testes rota transaction', () => {
     });
 
     it('Verifica se a resposta da requisição retona um erro se a conta não for encontrada com status 404 ', async () => {
-      const response = await chai.request(app).post('/transaction').send(newTransaction);
+      const response = await chai.request(app).post('/transaction').send(newTransactionUserTwo);
 
       expect(response.status).to.have.equal(404);
     });
@@ -107,10 +135,34 @@ describe('Testes rota transaction', () => {
       expect(response.status).to.have.equal(400);
     });
 
+    it('Verifica se a resposta da requisição retona um erro se a conta debitada for igual a creditada ', async () => {
+      const response = await chai.request(app).post('/transaction').send(newTransactionUserOne);
+
+      expect(response.status).to.have.equal(401);
+    });
+
     it('Verifica se a resposta da requisição retona um erro se os dados recebidos forem invalidos status 400', async () => {
       const response = await chai.request(app).post('/transaction').send(failTransaction);
 
       expect(response.status).to.have.equal(400);
+    });
+  });
+
+  describe('GET transaction getall de sucesso', () => {
+    before(() => {
+      sinon.stub(Token, 'decodeToken').resolves(true);
+      sinon.stub(transactionRepository, 'getAll').resolves(transactions);
+    });
+
+    after(() => {
+      (Token.decodeToken as SinonStub).restore();
+      (transactionRepository.getAll as SinonStub).restore();
+    });
+
+    it('Verifica se a resposta da requisição retona os dados corretos', async () => {
+      const response = await chai.request(app).get('/transaction');
+
+      expect(response.status).to.have.equal(200);
     });
   });
 });
