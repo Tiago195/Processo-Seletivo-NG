@@ -1,4 +1,3 @@
-// import { User, Transaction, Account } from '@prisma/client';
 import { db } from '../db';
 import { IQueryFilter } from '../interfaces/ITransaction.interface';
 

@@ -1,7 +1,6 @@
 import { User } from '@prisma/client';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { newTrasaction } from '../interfaces/ITransaction.interface';
 import { transactionService, TransactionService } from '../services/transaction.service';
 import { Token } from '../utils/jwt';
 

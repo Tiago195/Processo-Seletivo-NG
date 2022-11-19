@@ -14,7 +14,7 @@ export class UserService {
   }
 
   private encodePassword (password: string): string {
-    const salt = by.genSaltSync(Number(process.env.SALT) || 5);
+    const salt = by.genSaltSync(Number(process.env.SALT) ?? 5);
     const hash = by.hashSync(password, salt);
 
     return hash;
@@ -25,7 +25,7 @@ export class UserService {
     if (userExist) throw new ErrorApi('User already exist', StatusCodes.CONFLICT);
 
     const hash = this.encodePassword(user.password);
-    const { password, ...userWithoutPassword } = await this._repository.create({ ...user, password: hash });
+    const { password: _removed, ...userWithoutPassword } = await this._repository.create({ ...user, password: hash });
 
     return { ...userWithoutPassword, token: Token.encodeToken(userWithoutPassword) };
   }
@@ -37,7 +37,7 @@ export class UserService {
     const isValidLogin = await by.compare(user.password, userExist.password);
     if (!isValidLogin) throw new ErrorApi('Username or password is invalid', StatusCodes.BAD_REQUEST);
 
-    const { password, ...userWithoutPassword } = userExist;
+    const { password: _removed, ...userWithoutPassword } = userExist;
 
     return { ...userWithoutPassword, token: Token.encodeToken(userWithoutPassword) };
   }

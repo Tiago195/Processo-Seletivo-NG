@@ -4,11 +4,9 @@ import chai from 'chai';
 
 import chaiHttp from 'chai-http';
 import { app } from '../app';
-// import { UserRepository } from '../repositories/user.repository';
 import { userRepository } from '../repositories/user.repository';
 import { IUser } from '../interfaces/IUser.interface';
 import { Token } from '../utils/jwt';
-// import { describe } from 'node:test';
 
 chai.use(chaiHttp);
 
