@@ -41,6 +41,6 @@ docker-compose up --build -d
 
 Execute o comando
 ```bash
-npm run docs
+cd backend && npm run docs
 ```
 
